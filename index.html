@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Telecom Strategy Challenge (V2)</title>
+    <title>Online Telecom Strategy Challenge (V3)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -89,23 +89,36 @@
     </div>
 
     <script type="module">
+        // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // =========================================================================
+        // IMPORTANT: PASTE YOUR FIREBASE CONFIGURATION OBJECT HERE
+        // =========================================================================
+        // Get this from your Firebase project settings (see the guide)
         const firebaseConfig = {
-           // PASTE YOUR FIREBASE CONFIG FROM YOUR GUIDE HERE
-        };
+  apiKey: "AIzaSyA_65xmDMDBF4pUyI7KZgmYxWR9uj6MQ1Y",
+  authDomain: "cseo-quiz.firebaseapp.com",
+  projectId: "cseo-quiz",
+  storageBucket: "cseo-quiz.firebasestorage.app",
+  messagingSenderId: "398248899975",
+  appId: "1:398248899975:web:f898fbc949fc4efc654f22"
+};
+        // =========================================================================
         
+        // --- Global Variables ---
         let app, db, auth, unsubscribeLeaderboard;
         let audioCtx;
 
+        // --- Firebase Initialization ---
         async function initializeFirebase() {
             const authStatusEl = document.getElementById('auth-status');
             const startBtn = document.getElementById('start-btn');
             
             if (!firebaseConfig || !firebaseConfig.projectId) {
-                authStatusEl.textContent = 'Error: Firebase config is missing. Please follow the guide to paste your keys.';
+                authStatusEl.textContent = 'Error: Firebase config is missing. Please edit the index.html file and paste your keys.';
                 authStatusEl.style.color = '#ef4444';
                 startBtn.disabled = true;
                 console.error("Firebase initialization failed: firebaseConfig is missing or incomplete in the HTML file.");
@@ -128,12 +141,13 @@
                 });
             } catch (error) {
                 console.error("Firebase initialization failed:", error);
-                authStatusEl.textContent = 'Error: Could not connect to the server. Check your Firebase config and rules.';
+                authStatusEl.textContent = 'Error: Could not connect to the server. Check your Firebase config and security rules.';
                 authStatusEl.style.color = '#ef4444';
                 startBtn.disabled = true;
             }
         }
         
+        // --- Question Data ---
         const questions = [
             { question: "What is the primary factor fueling the massive demand for compute power and data center investment?", options: ["The rise of social media", "The growth of e-commerce", "Artificial Intelligence (AI)", "The expansion of streaming services"], answer: 2, explanation: "The report clearly states: 'AI is fuelling a massive demand for compute power driving billions in infrastructure investment...'" },
             { question: "Which country does the report highlight as a notable 5G success story, with its 5G traffic surging threefold year-over-year?", options: ["United States", "China", "South Korea", "India"], answer: 3, explanation: "The report's 'India Mobile Broadband Index 2025' section highlights this massive growth, stating 'Pan India monthly 5G traffic surges threefold y-o-y...'" },
@@ -155,6 +169,7 @@
             { question: "What was the approximate value of Sarana Menara's (TOWR) acquisition of Remala (DATA)?", options: ["Rp235.70 Billion", "Rp535.70 Billion", "Rp735.70 Billion", "Rp935.70 Billion"], answer: 1, explanation: "The report mentions 'Sarana Menara (TOWR) Completes Acquisition of Remala (DATA) Worth Rp535.70 Billion.'" }
         ];
 
+        // --- DOM Elements & Game State ---
         const startScreen = document.getElementById('start-screen'), gameScreen = document.getElementById('game-screen'), endScreen = document.getElementById('end-screen');
         const startBtn = document.getElementById('start-btn'), restartBtn = document.getElementById('restart-btn');
         const playerNameInput = document.getElementById('player-name-input'), playerNameDisplay = document.getElementById('player-name-display');
@@ -167,6 +182,7 @@
         let currentQuestionIndex = 0, score = 0, playerName = '', timerInterval, timeLeft = 10;
         const QUESTION_TIME_LIMIT = 10;
         
+        // --- Audio Functions ---
         function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -180,13 +196,14 @@
             oscillator.connect(gainNode);
             gainNode.connect(audioCtx.destination);
             oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5 note
+            oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
             gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
             oscillator.start(audioCtx.currentTime);
             oscillator.stop(audioCtx.currentTime + 0.1);
         }
 
+        // --- Game Logic ---
         function startGame() {
             initAudio();
             playerName = playerNameInput.value.trim();
@@ -219,7 +236,7 @@
                 updateTimerDisplay();
                 if (timeLeft <= 3 && timeLeft > 0) {
                     playBeep();
-                    timerProgressEl.style.stroke = '#ef4444'; // red-500
+                    timerProgressEl.style.stroke = '#ef4444';
                     timerTextEl.style.color = '#ef4444';
                 }
                 if (timeLeft <= 0) {
@@ -231,7 +248,7 @@
         function resetTimer() {
             clearInterval(timerInterval);
             timeLeft = QUESTION_TIME_LIMIT;
-            timerProgressEl.style.stroke = '#a855f7'; // purple-500
+            timerProgressEl.style.stroke = '#a855f7';
             timerTextEl.style.color = 'white';
             updateTimerDisplay();
         }
@@ -283,7 +300,7 @@
         function showExplanation(title) {
             const question = questions[currentQuestionIndex];
             explanationTitleEl.textContent = title;
-            explanationTitleEl.style.color = title === "Time's Up!" ? '#f97316' : '#ef4444'; // orange-500 or red-500
+            explanationTitleEl.style.color = title === "Time's Up!" ? '#f97316' : '#ef4444';
             explanationTextEl.textContent = question.explanation;
             explanationModal.classList.remove('hidden');
         }
@@ -303,6 +320,7 @@
             listenForLeaderboardUpdates();
         }
 
+        // --- Firestore Functions ---
         async function saveScoreToLeaderboard(name, finalScore) {
             try {
                 await addDoc(collection(db, "leaderboard"), { name, score: finalScore, timestamp: serverTimestamp() });
@@ -350,6 +368,7 @@
             startScreen.classList.remove('hidden');
         }
 
+        // --- Event Listeners & Initial Load ---
         startBtn.addEventListener('click', startGame);
         restartBtn.addEventListener('click', handleRestart);
         nextQuestionBtn.addEventListener('click', goToNextQuestion);
@@ -360,6 +379,7 @@
             timerProgressEl.style.strokeDashoffset = 0;
         });
 
+        // --- Background Animation ---
         const canvas = document.getElementById('game-canvas'), ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         let particlesArray;
@@ -392,6 +412,3 @@
     </script>
 </body>
 </html>
-```
-
-
