@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Telecom Strategy Challenge (with Leaderboard)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; overflow-y: auto; overflow-x: hidden; }
+        #game-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .card { background-color: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-option { transition: all 0.3s ease; background-color: rgba(255, 255, 255, 0.1); }
+        .btn-option:hover:not(:disabled) { background-color: rgba(168, 85, 247, 0.5); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3); }
+        .progress-bar-fill { transition: width 0.5s ease-in-out; }
+        .correct-answer { background-color: #22c55e !important; color: white; transform: scale(1.05); }
+        .incorrect-answer { background-color: #ef4444 !important; color: white; animation: shake 0.5s; }
+        .leaderboard-entry { transition: background-color: 0.3s; }
+        .leaderboard-entry:nth-child(odd) { background-color: rgba(255,255,255,0.03); }
+        .leaderboard-entry:hover { background-color: rgba(168, 85, 247, 0.2); }
+        .timer-circle { position: relative; width: 60px; height: 60px; }
+        .timer-circle svg { transform: rotate(-90deg); }
+        .timer-circle-bg { fill: none; stroke: rgba(255, 255, 255, 0.2); stroke-width: 4; }
+        .timer-circle-progress { fill: none; stroke: #a855f7; stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+        .timer-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.5rem; font-weight: bold; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        .spinner { border: 4px solid rgba(255, 255, 255, 0.2); border-left-color: #a855f7; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+    <canvas id="game-canvas"></canvas>
+
+    <div id="game-container" class="relative min-h-screen flex items-center justify-center p-4">
+        
+        <div id="start-screen" class="text-center card p-8 rounded-2xl max-w-2xl mx-auto fade-in">
+            <h1 class="text-4xl font-bold mb-4 text-purple-300">Online Telecom Strategy Challenge</h1>
+            <p class="text-gray-400 mb-6">Enter your name, then answer 12 questions against the clock. Faster correct answers get more points! </p>
+            <input type="text" id="player-name-input" placeholder="Enter your name..." class="w-full bg-gray-800 border border-gray-600 text-white rounded-lg p-3 text-center mb-4 focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <button id="start-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition duration-300 w-full disabled:bg-gray-500 disabled:cursor-not-allowed">Join Challenge</button>
+            <p id="auth-status" class="text-xs text-gray-500 mt-4">Connecting to server...</p>
+        </div>
+
+        <div id="game-screen" class="hidden w-full max-w-4xl mx-auto">
+            <div class="card p-8 rounded-2xl shadow-2xl">
+                <div class="mb-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-purple-300 font-semibold">Question <span id="question-number">1</span> of 12</p>
+                            <p class="text-white font-semibold" id="player-name-display"></p>
+                        </div>
+                        <div class="timer-circle">
+                             <svg width="60" height="60">
+                                <circle class="timer-circle-bg" cx="30" cy="30" r="26"></circle>
+                                <circle id="timer-progress" class="timer-circle-progress" cx="30" cy="30" r="26"></circle>
+                            </svg>
+                            <span id="timer-text" class="timer-text">10</span>
+                        </div>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-2.5 mt-2">
+                        <div id="progress-bar" class="bg-purple-500 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+                <h2 id="question-text" class="text-2xl font-semibold mb-8 min-h-[96px]"></h2>
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+            </div>
+        </div>
+        
+        <div id="explanation-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+            <div class="card p-8 rounded-2xl max-w-xl w-full text-center fade-in">
+                <h3 class="text-2xl font-bold text-red-400 mb-4">Incorrect Insight</h3>
+                <p class="text-lg text-gray-300 mb-4">The correct analysis is:</p>
+                <div id="explanation-text" class="bg-gray-800 p-4 rounded-lg text-left text-gray-300 mb-6"></div>
+                <button id="next-question-btn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded-full transition duration-300">Continue Analysis</button>
+            </div>
+        </div>
+
+        <div id="end-screen" class="hidden text-center card p-8 rounded-2xl max-w-3xl w-full mx-auto fade-in">
+            <h1 class="text-4xl font-bold mb-2 text-green-400">Analysis Complete!</h1>
+            <p class="text-xl text-gray-300 mb-8">Your final score is: <span id="final-score" class="font-bold"></span></p>
+            <div class="bg-gray-800 p-6 rounded-lg text-left mt-6">
+                 <h3 class="text-2xl font-bold text-yellow-400 mb-4 text-center">🏆 Leaderboard</h3>
+                 <div id="leaderboard-content" class="text-gray-300 max-h-60 overflow-y-auto"></div>
+            </div>
+            <button id="restart-btn" class="mt-8 bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition duration-300">Play Again</button>
+        </div>
+    </div>
+
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Setup ---
+        // PART 3 - PASTE YOUR FIREBASE CONFIG HERE
+        const firebaseConfig = {
+  apiKey: "AIzaSyA_65xmDMDBF4pUyI7KZgmYxWR9uj6MQ1Y",
+  authDomain: "cseo-quiz.firebaseapp.com",
+  projectId: "cseo-quiz",
+  storageBucket: "cseo-quiz.firebasestorage.app",
+  messagingSenderId: "398248899975",
+  appId: "1:398248899975:web:f898fbc949fc4efc654f22"
+};
+        
+        let app, db, auth;
+        let unsubscribeLeaderboard;
+
+        async function initializeFirebase() {
+            const authStatusEl = document.getElementById('auth-status');
+            const startBtn = document.getElementById('start-btn');
+            
+            // Check if the firebaseConfig object is populated before initializing
+            if (!firebaseConfig || !firebaseConfig.projectId) {
+                authStatusEl.textContent = 'Error: Firebase config is missing. Please follow the guide to paste your keys.';
+                authStatusEl.style.color = '#ef4444'; // red-500
+                startBtn.disabled = true;
+                console.error("Firebase initialization failed: firebaseConfig is missing or incomplete in the HTML file.");
+                return; // Stop the function if config is missing
+            }
+
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        authStatusEl.textContent = 'Connection successful. Ready to play!';
+                        authStatusEl.style.color = '#22c55e';
+                        startBtn.disabled = false;
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                });
+            } catch (error) {
+                console.error("Firebase initialization failed:", error);
+                authStatusEl.textContent = 'Error: Could not connect to the server. Check your Firebase config and rules.';
+                authStatusEl.style.color = '#ef4444';
+                startBtn.disabled = true;
+            }
+        }
+        
+        const questions = [
+             { question: "What is the primary factor fueling the massive demand for compute power and data center investment?", options: ["The rise of social media", "The growth of e-commerce", "Artificial Intelligence (AI)", "The expansion of streaming services"], answer: 2, explanation: "The report clearly states: 'AI is fuelling a massive demand for compute power driving billions in infrastructure investment...'" }, { question: "Which country does the report highlight as one of the most notable 5G success stories, with its 5G traffic surging threefold year-over-year?", options: ["United States", "China", "South Korea", "India"], answer: 3, explanation: "The report features a section titled 'India Mobile Broadband Index 2025' and states, 'Pan India monthly 5G traffic surges threefold y-o-y...'" }, { question: "What does the acronym 'FWA' stand for in the context of alternative connectivity methods?", options: ["Fiber Wire Access", "Fixed Wireless Access", "Fast Wavelength Allocation", "Future Web Architecture"], answer: 1, explanation: "The report defines FWA as 'Fixed Wireless Access', a technology that connects consumers to broadband Internet using wireless connectivity." }, { question: "According to the report, what was Indonesia's 5G coverage percentage as of April 2025?", options: ["4.44%", "14.8%", "25%", "44.4%"], answer: 0, explanation: "The report's 'Domestic Insights' section explicitly mentions: 'Indonesia's 5G coverage reaches only 4.44% as of April 2025.'" }, { question: "In the 'continued momentum' scenario, what is the projected capital expenditure for AI-related data centers by 2030?", options: ["$1.5 trillion", "$3.7 trillion", "$5.2 trillion", "$7.9 trillion"], answer: 2, explanation: "The report's 'Exhibit 2' chart and accompanying text specify that the 'Continued momentum' scenario requires an estimated $5.2 trillion in capital expenditures for AI data centers." }, { question: "What key strategy, involving the integration of fixed and mobile services, are leading telcos using to enhance customer loyalty and reduce churn?", options: ["Tiered Pricing", "Digital Customer Experience", "Fixed-Mobile Convergence (FMC)", "Network Resilience"], answer: 2, explanation: "Trend #2 highlights that 'Leading telcos are enhancing customer loyalty and reducing churn through... fixed-mobile convergence (FMC). Swisscom reduced churn by nearly 18% thanks to FMC.'" }, { question: "Besides FWA, which other alternative connectivity method, utilizing satellites in non-geostationary orbits, is showing explosive growth for reaching remote areas?", options: ["Geosynchronous (GEO) Satellites", "Low Earth Orbit (LEO) Satellites", "Submarine Fiber Cables", "Microwave Relays"], answer: 1, explanation: "Trend #4 discusses the satellite market, noting that 'LEO (low earth orbit) satellites are gaining traction due to their low latency and cost advantages... especially in sectors like government, aviation, and backhaul.'" }, { question: "Following their merger, what is a primary focus for the new entity XLSmart in the West Java region?", options: ["Building 5G in city centers only", "Launching a new streaming service", "Strengthening its customer network in suburban and rural areas", "Closing all physical stores"], answer: 2, explanation: "Under 'Domestic Insights,' the report states: 'XLSmart is strengthening its network presence across West Java, including suburban and rural areas...'" }, { question: "Of the five investor archetypes in the AI data center value chain, which group is projected to receive the largest share (~60%) of the $5.2 trillion investment?", options: ["Builders (Real Estate)", "Energizers (Utilities)", "Operators (Hyperscalers)", "Technology developers and designers (Chips/Hardware)"], answer: 3, explanation: "The report breaks down the $5.2 trillion investment, stating that '~60% ($3.1 trillion) to Technology developers and designers for chips and computing hardware' represents the largest share." }, { question: "While B2B services like Cloud and IoT are a key growth area for telcos, what is the current reality for the majority of their B2B revenue?", options: ["It's mostly generated by cybersecurity", "It's declining rapidly", "It still primarily comes from enterprise connectivity", "It has already surpassed B2C revenue"], answer: 2, explanation: "Trend #3 explains that while non-connectivity services are growing, 'enterprise connectivity revenue... still accounts for about 70% of telco B2B revenue, making it a strategic focus.'" }, { question: "The report mentions the 'Jevons Paradox' in relation to AI compute power. What does this paradox suggest might happen?", options: ["Efficiency gains will lead to a massive decrease in demand.", "Efficiency gains could be offset by increased experimentation, leading to a net increase in overall demand.", "AI will become too expensive for most companies.", "The demand for compute power will remain flat despite innovation."], answer: 1, explanation: "The report explains this complex idea: 'preliminary analysis suggests these [efficiency] gains may be offset by increased experimentation... potentially aligning with Jevons Paradox, where efficiency improvements increase overall demand.'" }, { question: "What is the overarching theme that the report identifies as tying together the five major telco trends for 2025?", options: ["Cost Reduction", "Regulation", "Innovation", "Competition"], answer: 2, explanation: "The conclusion of the 'Signalling the future' section explicitly states: 'Innovation emerges as the overarching theme that ties these together...'" }
+        ];
+
+        // --- DOM Elements & Game State ---
+        const startScreen = document.getElementById('start-screen'), gameScreen = document.getElementById('game-screen'), endScreen = document.getElementById('end-screen');
+        const startBtn = document.getElementById('start-btn'), restartBtn = document.getElementById('restart-btn');
+        const playerNameInput = document.getElementById('player-name-input'), playerNameDisplay = document.getElementById('player-name-display');
+        const questionNumberEl = document.getElementById('question-number'), questionTextEl = document.getElementById('question-text'), optionsContainer = document.getElementById('options-container'), progressBar = document.getElementById('progress-bar');
+        const explanationModal = document.getElementById('explanation-modal'), explanationTextEl = document.getElementById('explanation-text'), nextQuestionBtn = document.getElementById('next-question-btn');
+        const finalScoreEl = document.getElementById('final-score'), leaderboardContent = document.getElementById('leaderboard-content');
+        const timerTextEl = document.getElementById('timer-text'), timerProgressEl = document.getElementById('timer-progress');
+        const timerRadius = timerProgressEl.r.baseVal.value, timerCircumference = 2 * Math.PI * timerRadius;
+
+        let currentQuestionIndex = 0, score = 0, playerName = '', timerInterval, timeLeft = 10;
+        const QUESTION_TIME_LIMIT = 10;
+        
+        function startGame() {
+            playerName = playerNameInput.value.trim();
+            if (!playerName) { alert('Please enter your name to start!'); return; }
+            if (playerName.length > 20) { alert('Name must be 20 characters or less.'); return; }
+            currentQuestionIndex = 0; score = 0;
+            startScreen.classList.add('hidden'); endScreen.classList.add('hidden'); gameScreen.classList.remove('hidden'); gameScreen.classList.add('fade-in');
+            playerNameDisplay.textContent = playerName; updateProgress(); displayQuestion();
+        }
+
+        function displayQuestion() {
+            resetTimer();
+            const question = questions[currentQuestionIndex];
+            questionNumberEl.textContent = currentQuestionIndex + 1;
+            questionTextEl.textContent = question.question;
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.className = 'btn-option w-full text-left p-4 rounded-lg border border-transparent hover:border-purple-400';
+                button.onclick = () => checkAnswer(index, button);
+                optionsContainer.appendChild(button);
+            });
+            startTimer();
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) { handleTimeUp(); }
+            }, 1000);
+        }
+
+        function resetTimer() { clearInterval(timerInterval); timeLeft = QUESTION_TIME_LIMIT; updateTimerDisplay(); }
+
+        function updateTimerDisplay() {
+            timerTextEl.textContent = timeLeft;
+            const progress = timeLeft / QUESTION_TIME_LIMIT;
+            const offset = timerCircumference * (1 - progress);
+            timerProgressEl.style.strokeDasharray = `${timerCircumference}`;
+            timerProgressEl.style.strokeDashoffset = offset;
+        }
+
+        function handleTimeUp() {
+            clearInterval(timerInterval);
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach(btn => btn.disabled = true);
+            const correctButton = buttons[questions[currentQuestionIndex].answer];
+            correctButton.classList.add('correct-answer');
+            setTimeout(showExplanation, 1000);
+        }
+        
+        function checkAnswer(selectedIndex, button) {
+            clearInterval(timerInterval);
+            const question = questions[currentQuestionIndex];
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach(btn => btn.disabled = true);
+            if (selectedIndex === question.answer) {
+                score += timeLeft;
+                button.classList.add('correct-answer');
+                setTimeout(goToNextQuestion, 1000);
+            } else {
+                button.classList.add('incorrect-answer');
+                buttons[question.answer].classList.add('correct-answer');
+                setTimeout(showExplanation, 1000);
+            }
+        }
+        
+        function goToNextQuestion() {
+            currentQuestionIndex++; updateProgress();
+            if (currentQuestionIndex < questions.length) { displayQuestion(); } else { endGame(); }
+        }
+
+        function showExplanation() {
+            const question = questions[currentQuestionIndex];
+            explanationTextEl.textContent = question.explanation;
+            explanationModal.classList.remove('hidden');
+        }
+        
+        function updateProgress() {
+            const progressPercentage = (currentQuestionIndex / questions.length) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+        }
+
+        async function endGame() {
+            progressBar.style.width = '100%';
+            gameScreen.classList.add('hidden');
+            endScreen.classList.remove('hidden');
+            finalScoreEl.textContent = `${score} points`;
+            leaderboardContent.innerHTML = `<div class="spinner mx-auto"></div><p class="mt-2 text-sm text-gray-400 text-center">Submitting score and loading leaderboard...</p>`;
+            await saveScoreToLeaderboard(playerName, score);
+            listenForLeaderboardUpdates();
+        }
+
+        async function saveScoreToLeaderboard(name, finalScore) {
+            try {
+                await addDoc(collection(db, "leaderboard"), { name, score: finalScore, timestamp: serverTimestamp() });
+            } catch (e) {
+                console.error("Error adding document: ", e);
+                leaderboardContent.innerHTML = `<p class="text-red-400">Error: Could not save your score.</p>`;
+            }
+        }
+
+        function listenForLeaderboardUpdates() {
+            const q = query(collection(db, "leaderboard"));
+            if (unsubscribeLeaderboard) { unsubscribeLeaderboard(); }
+            unsubscribeLeaderboard = onSnapshot(q, (querySnapshot) => {
+                const leaderboardData = [];
+                querySnapshot.forEach((doc) => { leaderboardData.push(doc.data()); });
+                leaderboardData.sort((a, b) => b.score - a.score);
+                displayLeaderboard(leaderboardData.slice(0, 10));
+            }, (error) => {
+                console.error("Error fetching leaderboard: ", error);
+                leaderboardContent.innerHTML = `<p class="text-red-400">Error: Could not fetch the leaderboard.</p>`;
+            });
+        }
+        
+        function displayLeaderboard(data) {
+            if (data.length === 0) {
+                leaderboardContent.innerHTML = `<p class="text-center text-gray-400">Be the first to get on the leaderboard!</p>`;
+                return;
+            }
+            let html = '<div class="space-y-2">';
+            data.forEach((entry, index) => {
+                const rank = index + 1;
+                let medal = '';
+                if (rank === 1) medal = '🥇';
+                else if (rank === 2) medal = '🥈';
+                else if (rank === 3) medal = '🥉';
+                html += `<div class="leaderboard-entry flex items-center justify-between p-3 rounded-lg"><div class="flex items-center"><span class="font-bold text-lg w-10">${medal || rank}</span><span class="font-semibold text-purple-300">${entry.name}</span></div><p class="font-bold text-lg">${entry.score} pts</p></div>`;
+            });
+            html += '</div>';
+            leaderboardContent.innerHTML = html;
+        }
+
+        function handleRestart() {
+            if (unsubscribeLeaderboard) { unsubscribeLeaderboard(); }
+            endScreen.classList.add('hidden');
+            startScreen.classList.remove('hidden');
+        }
+
+        startBtn.addEventListener('click', startGame);
+        restartBtn.addEventListener('click', handleRestart);
+        nextQuestionBtn.addEventListener('click', goToNextQuestion);
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeFirebase();
+            timerProgressEl.style.strokeDasharray = timerCircumference;
+            timerProgressEl.style.strokeDashoffset = 0;
+        });
+
+        const canvas = document.getElementById('game-canvas'), ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let particlesArray;
+        const mouse = { x: null, y: null, radius: (canvas.height/100) * (canvas.width/100) };
+        window.addEventListener('mousemove', (event) => { mouse.x = event.x; mouse.y = event.y; });
+        window.addEventListener('mouseout', () => { mouse.x = undefined; mouse.y = undefined; });
+        window.addEventListener('resize', () => { canvas.width = innerWidth; canvas.height = innerHeight; mouse.radius = (canvas.height/100) * (canvas.width/100); init(); });
+        class Particle {
+            constructor(x, y, dX, dY, s, c) { this.x = x; this.y = y; this.directionX = dX; this.directionY = dY; this.size = s; this.color = c; }
+            draw() { ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false); ctx.fillStyle = this.color; ctx.fill(); }
+            update() { if (this.x > canvas.width || this.x < 0) { this.directionX = -this.directionX; } if (this.y > canvas.height || this.y < 0) { this.directionY = -this.directionY; } this.x += this.directionX; this.y += this.directionY; this.draw(); }
+        }
+        function init() {
+            particlesArray = []; let numParticles = (canvas.height * canvas.width) / 9000;
+            for (let i = 0; i < numParticles; i++) {
+                let s = (Math.random() * 2) + 1, x = (Math.random() * ((innerWidth - s * 2) - (s * 2)) + s * 2), y = (Math.random() * ((innerHeight - s * 2) - (s * 2)) + s * 2), dX = (Math.random() * 0.4) - 0.2, dY = (Math.random() * 0.4) - 0.2;
+                particlesArray.push(new Particle(x, y, dX, dY, s, 'rgba(168, 85, 247, 0.3)'));
+            }
+        }
+        function animate() { requestAnimationFrame(animate); ctx.clearRect(0,0,innerWidth, innerHeight); for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); } connect(); }
+        function connect(){
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let dist = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    if (dist < (canvas.width/7) * (canvas.height/7)) { let opacity = 1 - (dist/20000); ctx.strokeStyle = `rgba(147, 112, 219, ${opacity})`; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(particlesArray[a].x, particlesArray[a].y); ctx.lineTo(particlesArray[b].x, particlesArray[b].y); ctx.stroke(); }
+                }
+            }
+        }
+        init(); animate();
+    </script>
+</body>
+</html>
+```
