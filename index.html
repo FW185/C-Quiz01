@@ -357,7 +357,7 @@
                 if (rank === 1) medal = '🥇';
                 else if (rank === 2) medal = '🥈';
                 else if (rank === 3) medal = '🥉';
-                html += `<div class="leaderboard-entry flex items-center justify-between p-3 rounded-lg"><div class="flex items-center"><span class="font-bold text-lg w-10">${medal || rank}</span><span class="font-semibold text-purple-300">${entry.name}</span></div><p class="font-bold text-lg">${entry.score} pts</p></div>`;
+                html += `<div class="leaderboard-entry flex items-center justify-between p-3 rounded-lg"><div class="flex items-center"><span class="font-bold text-lg w-10">${medal || rank}</span><span class="font-semibold text-purple-300">${entry.name}</span></div><p class="font-bold text-lg">${entry.score} / ${TOTAL_POSSIBLE_SCORE}</p></div>`;
             });
             html += '</div>';
             leaderboardContent.innerHTML = html;
