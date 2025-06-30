@@ -39,7 +39,6 @@
 
     <div id="game-container" class="relative min-h-screen flex items-center justify-center p-4">
         
-        <!-- Landing Screen -->
         <div id="landing-screen" class="w-full max-w-2xl mx-auto fade-in">
              <div class="card p-8 rounded-2xl text-center">
                 <h1 class="text-4xl font-bold mb-4 text-purple-300">Telecom Strategy Challenge</h1>
@@ -49,18 +48,17 @@
                 <div id="quiz-selection" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <button data-quiz="may" class="btn-quiz-select p-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
                         <h2 class="text-2xl font-bold mb-2">May Edition</h2>
-                        <p class="text-sm text-gray-400">Focus on AI, FWA, and Global 5G Trends.</p>
+                        <p class="text-sm text-gray-400">15 Questions on AI, 5G, FWA & Telco Trends.</p>
                     </button>
                     <button data-quiz="june" class="btn-quiz-select p-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
                         <h2 class="text-2xl font-bold mb-2">June Edition</h2>
-                        <p class="text-sm text-gray-400">Focus on ICT Models, TMT in Europe, and Domestic M&A.</p>
+                        <p class="text-sm text-gray-400">15 Questions on ICT Models, TMT & M&A.</p>
                     </button>
                 </div>
                 <p id="auth-status" class="text-xs text-gray-500 mt-6">Connecting to server...</p>
              </div>
         </div>
 
-        <!-- Game Screen -->
         <div id="game-screen" class="hidden w-full max-w-4xl mx-auto">
             <div class="card p-8 rounded-2xl shadow-2xl">
                 <div class="mb-6">
@@ -83,7 +81,6 @@
             </div>
         </div>
         
-        <!-- Explanation Modal -->
         <div id="explanation-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
             <div class="card p-8 rounded-2xl max-w-xl w-full text-center fade-in">
                 <h3 id="explanation-title" class="text-2xl font-bold mb-4"></h3>
@@ -93,7 +90,6 @@
             </div>
         </div>
 
-        <!-- End Screen -->
         <div id="end-screen" class="hidden text-center card p-8 rounded-2xl max-w-3xl w-full mx-auto fade-in">
             <h1 class="text-4xl font-bold mb-2 text-green-400">Analysis Complete!</h1>
             <p class="text-xl text-gray-300 mb-8">Your final score for this edition is: <span id="final-score" class="font-bold"></span></p>
@@ -117,9 +113,7 @@
         import { getFirestore, collection, addDoc, query, onSnapshot, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // =========================================================================
-        // IMPORTANT: PASTE YOUR FIREBASE CONFIGURATION OBJECT HERE
-        // =========================================================================
-       const firebaseConfig = {
+        const firebaseConfig = {
   apiKey: "AIzaSyA_65xmDMDBF4pUyI7KZgmYxWR9uj6MQ1Y",
   authDomain: "cseo-quiz.firebaseapp.com",
   projectId: "cseo-quiz",
@@ -139,57 +133,51 @@
             may: {
                 title: "May Edition",
                 questions: [
-                    { question: "What is the primary factor fueling the massive demand for compute power and data center investment?", options: ["The rise of social media", "The growth of e-commerce", "Artificial Intelligence (AI)", "The expansion of streaming services"], answer: 2, explanation: "The report clearly states: 'AI is fuelling a massive demand for compute power driving billions in infrastructure investment...'" },
-                    { question: "Which country is a notable 5G success, with its 5G traffic surging threefold year-over-year?", options: ["United States", "China", "South Korea", "India"], answer: 3, explanation: "The report's 'India Mobile Broadband Index 2025' section highlights this massive growth, stating 'Pan India monthly 5G traffic surges threefold y-o-y...'" },
-                    { question: "What does the acronym 'FWA' stand for in the context of alternative connectivity methods?", options: ["Fiber Wire Access", "Fixed Wireless Access", "Fast Wavelength Allocation", "Future Web Architecture"], answer: 1, explanation: "The report defines FWA as 'Fixed Wireless Access', a technology that connects consumers to broadband Internet using wireless connectivity to bridge the last mile." },
-                    { question: "According to the May report, what was Indonesia's 5G coverage percentage as of April 2025?", options: ["4.44%", "14.8%", "25%", "44.4%"], answer: 0, explanation: "The 'Domestic Insights' section explicitly states: 'Indonesia's 5G coverage reaches only 4.44% as of April 2025,' highlighting the need for accelerated development." },
-                    { question: "In the 'continued momentum' scenario, what is the projected capital expenditure for AI-related data centers by 2030?", options: ["$1.5 trillion", "$3.7 trillion", "$5.2 trillion", "$7.9 trillion"], answer: 2, explanation: "Exhibit 2 in the report shows the 'Continued momentum' scenario requiring an estimated $5.2 trillion in capital expenditures for AI data centers." },
-                    { question: "What key strategy, involving integrating fixed and mobile services, are leading telcos using to reduce churn?", options: ["Tiered Pricing", "Digital Customer Experience", "Fixed-Mobile Convergence (FMC)", "Network Resilience"], answer: 2, explanation: "Trend #2 highlights 'Fixed-Mobile Convergence (FMC)' as a key B2C theme, with examples like Swisscom reducing churn by nearly 18% thanks to it." },
-                    { question: "Besides FWA, which satellite technology is showing explosive growth for remote areas due to low latency?", options: ["GEO Satellites", "Low Earth Orbit (LEO) Satellites", "Submarine Fiber Cables", "Microwave Relays"], answer: 1, explanation: "Trend #4 discusses the satellite market, noting that 'LEO (low earth orbit) satellites are gaining traction due to their low latency and cost advantages.'" },
-                    { question: "Following their merger, what is a primary network focus for the new entity XLSmart in West Java?", options: ["Building 5G in city centers only", "Launching a new streaming service", "Strengthening network in suburban/rural areas", "Closing all physical stores"], answer: 2, explanation: "The report states: 'XLSmart is strengthening its network presence across West Java, including suburban and rural areas...'" },
-                    { question: "Which investor group gets the largest share (~60%) of the $5.2 trillion AI data center investment?", options: ["Builders (Real Estate)", "Energizers (Utilities)", "Operators (Hyperscalers)", "Technology developers (Chips/Hardware)"], answer: 3, explanation: "The report breaks down the investment, allocating the largest portion, '~60% ($3.1 trillion) to Technology developers and designers for chips and computing hardware.'" },
-                    { question: "While growing, what is the current reality for most telcos' B2B revenue streams?", options: ["Mostly from cybersecurity", "Declining rapidly", "Still primarily from enterprise connectivity", "Has already surpassed B2C revenue"], answer: 2, explanation: "Trend #3 explains that despite diversification, 'enterprise connectivity revenue... still accounts for about 70% of telco B2B revenue.'" },
-                    { question: "What does the 'Jevons Paradox' suggest might happen with AI compute power efficiency gains?", options: ["Decrease demand", "Increase overall demand", "AI will become too expensive", "Demand will remain flat"], answer: 1, explanation: "The report suggests that efficiency improvements might increase overall demand due to more experimentation, aligning with the 'Jevons Paradox'." },
-                    { question: "What is the overarching theme the May report identifies as tying together the five major telco trends for 2025?", options: ["Cost Reduction", "Regulation", "Innovation", "Competition"], answer: 2, explanation: "The conclusion of the 'Signalling the future' section explicitly states: 'Innovation emerges as the overarching theme that ties these together...'" },
-                    { question: "Which US operator claims the only nationwide 5G Advanced network on 5G Standalone architecture?", options: ["AT&T", "Verizon", "T-Mobile", "Dish Network"], answer: 2, explanation: "The International News section highlights 'T-Mobile US celebrates nationwide 5G SA rollout' and claims it operates the only nationwide 5G Advanced network in the U.S." },
-                    { question: "What next-gen eSIM standard is Telenor IoT one of the first to adopt?", options: ["SGP.02", "SGP.22", "SGP.32", "SGP.42"], answer: 2, explanation: "The report mentions 'Telenor IoT adopts next-gen SGP.32 esim standard,' for remote SIM management." },
-                    { question: "Which FinTech company's push into the telecom sector is highlighted in the May report?", options: ["Monzo", "Nubank", "Starling Bank", "Revolut"], answer: 3, explanation: "The report states, 'Revolut and other fintechs making push into telecom sector,' and details Revolut's launch of a mobile service." },
-                    { question: "Which Indian company was chosen by Komdigi to accelerate 5G and AI development in Indonesia?", options: ["Reliance Jio", "Bharti Airtel", "Vodafone Idea", "Tejas Networks"], answer: 3, explanation: "A domestic update states 'Komdigi chooses Indian company, Tejas Networks to accelerate 5G and Al in Indonesia.'" },
-                    { question: "What was the primary cause of the internet disruption in Bali on May 2, 2025?", options: ["A submarine cable cut", "A cyberattack", "A software failure", "A power outage"], answer: 3, explanation: "The report on domestic insights clearly states: 'Internet connection disrupted due to power outage in Bali... traced to a disruption at the Celukan Bawang Power Plant.'" },
-                    { question: "What was the approximate value of Sarana Menara's (TOWR) acquisition of Remala (DATA)?", options: ["Rp235.70 Billion", "Rp535.70 Billion", "Rp735.70 Billion", "Rp935.70 Billion"], answer: 1, explanation: "The report mentions 'Sarana Menara (TOWR) Completes Acquisition of Remala (DATA) Worth Rp535.70 Billion.'" }
+                    { question: "How much capital is projected for non-AI IT applications in data centers by 2030?", options: ["$1.0 trillion", "$1.5 trillion", "$2.0 trillion", "$2.5 trillion"], answer: 1, explanation: "The report states that data centers will require $1.5 trillion for traditional IT applications, separate from AI-specific investments." },
+                    { question: "By 2030, what percentage of global data center capacity demand will be driven by AI workloads?", options: ["About 50%", "About 60%", "About 70%", "About 80%"], answer: 2, explanation: "The analysis projects that approximately 70% of the demand for data center capacity will be fueled by AI workloads by 2030." },
+                    { question: "In the 'Accelerated demand' scenario, how many incremental gigawatts (GW) for AI are projected by 2030?", options: ["124 GW", "156 GW", "205 GW", "300 GW"], answer: 2, explanation: "The high-growth 'Accelerated demand' scenario estimates an addition of 205 incremental gigawatts for AI capacity by 2030." },
+                    { question: "Which investor archetype is responsible for power generation, transmission, and cooling in the AI value chain?", options: ["Builders", "Operators", "Al Architects", "Energizers"], answer: 3, explanation: "The 'Energizers' archetype includes utilities and energy providers who build and manage the power and cooling infrastructure for data centers." },
+                    { question: "What was the average monthly data traffic per user in India during 2024?", options: ["19.5 GB", "24.1 GB", "27.5 GB", "40.0 GB"], answer: 2, explanation: "The India Mobile Broadband Index for 2025 shows that the average data consumption per user soared to 27.5 GB per month in 2024." },
+                    { question: "How many active 5G devices were reported in India in 2024?", options: ["150 million", "215 million", "271 million", "310 million"], answer: 2, explanation: "The number of active 5G devices in India grew significantly, reaching 271 million in 2024 as the device ecosystem expanded." },
+                    { question: "According to Kearney's analysis, what percentage of telcos are considered 'leaders' in AI adoption?", options: ["2%", "7%", "15%", "25%"], answer: 1, explanation: "The analysis identifies that while many telcos are exploring AI, only a small fraction (7%) have reached the 'leader' stage of adoption." },
+                    { question: "What is the projected Compound Annual Growth Rate (CAGR) for telco B2C ARPU by 2030?", options: ["2%", "3%", "4%", "5%"], answer: 1, explanation: "Despite rising data demand, the report projects a modest CAGR of 3% for business-to-consumer Average Revenue Per User by 2030." },
+                    { question: "By 2030, how many million connections is Fixed Wireless Access (FWA) expected to reach?", options: ["188 million", "250 million", "350 million", "450 million"], answer: 2, explanation: "The report projects explosive growth for FWA, expecting it to grow to 350 million connections globally by 2030." },
+                    { question: "What was the average percentage decline in full-time equivalent (FTE) staff for telcos between 2018 and 2023?", options: ["10%", "14%", "18%", "22%"], answer: 1, explanation: "As part of cost optimization, a Kearney analysis found that 60% of telcos downsized, with an average FTE decline of 14% from 2018 to 2023." },
+                    { question: "What technology did T-Mobile claim is working on most modern smartphones, delivering over a million beta messages?", options: ["5G Advanced", "Network Slicing", "LEO Satellite Network", "Decentralized WiFi"], answer: 2, explanation: "The international news section highlights T-Mobile's achievement in having the only satellite network in the U.S. working on modern smartphones." },
+                    { question: "AT&T partnered with which decentralized Wi-Fi network to expand its U.S. coverage?", options: ["Helium Network", "Meshtastic", "FreedomFi", "Pollen Mobile"], answer: 0, explanation: "The report states that AT&T is partnering with the Helium Network to leverage its community-built Wi-Fi hotspot infrastructure." },
+                    { question: "In 2024, what was Telkom Indonesia's approximate net profit?", options: ["Rp15.1 trillion", "Rp20.2 trillion", "Rp23.6 trillion", "Rp28.9 trillion"], answer: 2, explanation: "The domestic insights section reports that Telkom Indonesia achieved a strong net profit of Rp23.6 trillion in 2024." },
+                    { question: "How many customers did Indosat record in the Bali and Nusa Tenggara (Bali Nusra) region in Q1 2025?", options: ["1.9 million", "2.4 million", "2.9 million", "3.4 million"], answer: 2, explanation: "Indosat saw strong performance in the Bali Nusra region, with its customer base growing to 2.9 million in the first quarter of 2025." },
+                    { question: "How many new Base Transceiver Station (BTS) sites does the merged XLSMART entity plan to build?", options: ["5,000", "6,000", "8,000", "10,000"], answer: 2, explanation: "Following its merger, XLSMART announced its commitment to expand its network by building 8,000 new BTS sites." }
                 ]
             },
             june: {
                 title: "June Edition",
                 questions: [
-                    { question: "Which ICT operating model for telcos creates a separate legal entity for agility but risks diluting the main brand?", options: ["Integrated Model", "Leveraged Model", "Independent Model", "Hybrid Model"], answer: 1, explanation: "The Leveraged Model creates a separate entity for focus and agility, but can dilute the brand and complicate cross-selling." },
-                    { question: "According to McKinsey, approximately how much value has Europe's TMT sector missed out on since 2000 by not keeping pace with global growth?", options: ["$2 trillion", "$5 trillion", "$8 trillion", "$10 trillion"], answer: 2, explanation: "The report's exhibit clearly states: '$8 trillion - Missed value that would have been generated by 2024 if Europe had maintained market cap share from 2000.'" },
-                    { question: "Of the five key TMT battlegrounds in Europe, which one is projected to have the largest incremental spend by 2030?", options: ["Content and commerce", "Connectivity", "Data infrastructure", "Al and next-gen software"], answer: 3, explanation: "The 'Bespoke at scale' value pool, representing AI and next-gen software, is estimated at $310 billion, the highest of the five." },
+                    { question: "Which ICT operating model creates a separate legal entity for agility but risks diluting the main brand?", options: ["Integrated Model", "Leveraged Model", "Independent Model", "Hybrid Model"], answer: 1, explanation: "The Leveraged Model creates a separate entity for focus and agility but can dilute the brand and complicate cross-selling." },
+                    { question: "How much value has Europe's TMT sector missed by not keeping pace with global growth since 2000?", options: ["$2 trillion", "$5 trillion", "$8 trillion", "$10 trillion"], answer: 2, explanation: "The report's exhibit clearly states: '$8 trillion - Missed value that would have been generated by 2024 if Europe had maintained market cap share from 2000.'" },
+                    { question: "Which European TMT battleground is projected to have the largest incremental spend by 2030?", options: ["Content and commerce", "Connectivity", "Data infrastructure", "Al and next-gen software"], answer: 3, explanation: "The 'Bespoke at scale' value pool (AI and next-gen software) is estimated at $310 billion, the highest of the five." },
                     { question: "Who was appointed as the new President Director of Telkom during the May 2025 AGMS?", options: ["Ririek Adriansyah", "Muhammad Awaluddin", "Dian Siswarini", "Angga Raka Prabowo"], answer: 2, explanation: "The June report states: 'Dian Siswarini, former President Director of XL Axiata, has been appointed as Telkom's new President Director...'" },
-                    { question: "What is the name of the 70-billion-parameter large language model launched by Indosat and GoTo?", options: ["NusantaraGPT", "GarudaAI", "Sahabat-AI", "MerdekaLLM"], answer: 2, explanation: "The report announces: 'Indosat - GoTo launch Sahabat Al with 70 Billion Parameters and 5 languages.'" },
-                    { question: "What is the primary focus of the strategic partnership between ZTE and the newly merged XLSMART?", options: ["Launch a new satellite service", "Build a new data center", "Enhance digital connectivity & network infrastructure", "Develop a new FinTech app"], answer: 2, explanation: "The report states their collaboration aims to 'bolster Indonesia's digital infrastructure by focusing on wireless and energy solutions...'" },
+                    { question: "What is the name of the 70-billion-parameter LLM launched by Indosat and GoTo?", options: ["NusantaraGPT", "GarudaAI", "Sahabat-AI", "MerdekaLLM"], answer: 2, explanation: "The report announces: 'Indosat - GoTo launch Sahabat Al with 70 Billion Parameters and 5 languages.'" },
+                    { question: "What is the primary focus of the partnership between ZTE and the newly merged XLSMART?", options: ["Launch a satellite service", "Build a new data center", "Enhance digital connectivity & network infrastructure", "Develop a FinTech app"], answer: 2, explanation: "The report states their collaboration aims to 'bolster Indonesia's digital infrastructure by focusing on wireless and energy solutions...'" },
                     { question: "Which Telkomsel prepaid brand is being discontinued as part of its product simplification strategy?", options: ["Simpati", "By.U", "Telkomsel Lite", "Kartu As"], answer: 2, explanation: "The report notes that Telkomsel 'has streamlined its prepaid portfolio... while discontinuing Telkomsel Lite and Telkomsel Prabayar.'" },
-                    { question: "Which model is best for a telco entering a highly competitive, innovation-driven ICT market where agility is crucial?", options: ["Integrated", "Leveraged", "Independent", "Synergized"], answer: 2, explanation: "The 'Independent model' is best for highly competitive markets as it grants significant autonomy to innovate rapidly." },
-                    { question: "What is the primary goal of Europe's 'Sovereign Cloud and AI' initiatives like Gaia-X?", options: ["To lower cloud storage costs", "To increase data sharing with the US", "To comply with privacy laws & reduce reliance on foreign providers", "To create a single European social media platform"], answer: 2, explanation: "The report explains the goal is 'To regain digital control... comply with strict privacy laws and reduce reliance on foreign cloud providers.'" },
+                    { question: "Which model is best for a telco in a highly competitive, innovation-driven ICT market?", options: ["Integrated", "Leveraged", "Independent", "Synergized"], answer: 2, explanation: "The 'Independent model' is best for highly competitive markets as it grants significant autonomy to innovate rapidly." },
+                    { question: "What is the primary goal of Europe's 'Sovereign Cloud and AI' initiatives like Gaia-X?", options: ["Lower cloud costs", "Increase data sharing with the US", "Comply with privacy laws & reduce reliance on foreign providers", "Create a European social media platform"], answer: 2, explanation: "The report explains the goal is 'To regain digital control... comply with strict privacy laws and reduce reliance on foreign cloud providers.'" },
                     { question: "Which two entities signed an MoU to drive broadband expansion in South Asia and MENA?", options: ["GSMA & ITU", "SAMENA Council & WBBA", "ETNO & Telenor", "Vodafone & Three"], answer: 1, explanation: "The International News section begins with: 'SAMENA council, WBBA team to drive broadband in South Asia and MENA.'" },
-                    { question: "After their merger, Vodafone and Three became the UK's largest mobile operator, with how many customers?", options: ["15 million", "21 million", "27 million", "35 million"], answer: 2, explanation: "The article on the merger states: 'The merged entity becomes the UK's largest mobile operator with 27 million customers...'" },
+                    { question: "After their merger, Vodafone and Three became the UK's largest mobile operator with how many customers?", options: ["15 million", "21 million", "27 million", "35 million"], answer: 2, explanation: "The article on the merger states: 'The merged entity becomes the UK's largest mobile operator with 27 million customers...'" },
                     { question: "Which company is partnering with SailGP to provide 5G and AI for an immersive viewing experience?", options: ["Verizon", "AT&T", "Vodafone", "T-Mobile"], answer: 3, explanation: "The report highlights: 'SailGP is partnering with T-Mobile, its exclusive U.S. 5G provider, to bring cutting-edge 5G technology...' to the event." },
-                    { question: "What did the World Bank cut its 2025 global growth forecast to, due to rising tariffs and uncertainty?", options: ["3.1%", "2.7%", "2.3%", "1.9%"], answer: 2, explanation: "The report mentions 'The World Bank Cut its 2025 Global Growth Forecast to 2.3%.'" },
-                    { question: "What is the main purpose of Telkom's collaboration with WIFI, as clarified in the June report?", options: ["To build new fiber networks nationwide", "To monetize underutilized capacity in existing IndiHome areas", "To offer free public Wi-Fi", "To launch a new mobile brand"], answer: 1, explanation: "The report clarifies the MoU's aim is 'to monetize underutilized capacity in existing IndiHome-covered areas...'" },
-                    { question: "What concern was raised regarding the appointment of two Deputy Ministers as President Commissioners of major operators?", options: ["Lack of experience", "The salary being too high", "Potential conflict of interest and neutrality", "They would be too busy"], answer: 2, explanation: "The report details the response to 'concerns about potential conflicts of interest' and the 'neutrality issue' from these appointments." },
-                    { question: "What is the long-term strategic goal behind Telkomsel's product simplification and ARPU improvement?", options: ["To fund international expansion", "To prepare for a merger with Indosat", "To increase FBB penetration by addressing low mobile ARPU", "To pay off corporate debt"], answer: 2, explanation: "The report states 'TLKM believes that low mobile ARPU has been a key barrier to FBB penetration,' linking the strategy to a push for fixed broadband." },
-                    { question: "Which case study is used to exemplify the 'Leveraged Model' for ICT diversification?", options: ["Verizon", "Solutions by STC", "T-Systems (Deutsche Telekom)", "Singtel"], answer: 2, explanation: "The report details the 'Case Study - T-Systems,' explaining how Deutsche Telekom established it as a separate entity, fitting the Leveraged Model." },
-                    { question: "In the 'Fight for consumer attention' battleground, what percentage of Gen Z prefer user-generated content?", options: ["20%", "40%", "60%", "80%"], answer: 2, explanation: "The report states, 'Roughly 60% of Gen Z prefer user-generated content over other media options.'" }
+                    { question: "What did the World Bank cut its 2025 global growth forecast to, due to rising tariffs?", options: ["3.1%", "2.7%", "2.3%", "1.9%"], answer: 2, explanation: "The report mentions 'The World Bank Cut its 2025 Global Growth Forecast to 2.3%.'" },
+                    { question: "What is the main purpose of Telkom's collaboration with WIFI, as clarified in the June report?", options: ["Build new fiber networks nationwide", "Monetize underutilized capacity in existing IndiHome areas", "Offer free public Wi-Fi", "Launch a new mobile brand"], answer: 1, explanation: "The report clarifies the MoU's aim is 'to monetize underutilized capacity in existing IndiHome-covered areas...'" },
+                    { question: "What concern was raised regarding the appointment of Deputy Ministers as President Commissioners of Telkom and Indosat?", options: ["Lack of experience", "The salary being too high", "Potential conflict of interest and neutrality", "They would be too busy"], answer: 2, explanation: "The report details the response to 'concerns about potential conflicts of interest' and the 'neutrality issue' from these appointments." }
                 ]
             }
         };
-        const TOTAL_POSSIBLE_SCORE = quizData.may.questions.length * QUESTION_TIME_LIMIT; // Both quizzes have same length
+        const TOTAL_POSSIBLE_SCORE = quizData.may.questions.length * QUESTION_TIME_LIMIT;
 
         const landingScreen = document.getElementById('landing-screen'), gameScreen = document.getElementById('game-screen'), endScreen = document.getElementById('end-screen');
         const playAgainBtn = document.getElementById('play-again-btn');
-        const playerNameInput = document.getElementById('player-name-input'), playerNameDisplay = document.getElementById('player-name-display');
+        const playerNameInput = document.getElementById('player-name-input');
         const quizSelectionContainer = document.getElementById('quiz-selection');
-        const quizTitleDisplay = document.getElementById('quiz-title-display');
+        const quizTitleDisplay = document.getElementById('quiz-title-display'), playerNameDisplay = document.getElementById('player-name-display');
         const questionNumberEl = document.getElementById('question-number'), questionTextEl = document.getElementById('question-text'), optionsContainer = document.getElementById('options-container'), progressBar = document.getElementById('progress-bar');
         const explanationModal = document.getElementById('explanation-modal'), explanationTitleEl = document.getElementById('explanation-title'), explanationTextEl = document.getElementById('explanation-text'), nextQuestionBtn = document.getElementById('next-question-btn');
         const finalScoreEl = document.getElementById('final-score'), leaderboardContent = document.getElementById('leaderboard-content'), leaderboardTabs = document.querySelectorAll('.leaderboard-tab');
@@ -377,14 +365,15 @@
                 const juneScoresPromise = getDocs(query(collection(db, `leaderboard_june`)));
                 const [maySnapshot, juneSnapshot] = await Promise.all([mayScoresPromise, juneScoresPromise]);
                 const combinedScores = new Map();
-                maySnapshot.forEach(doc => {
-                    const { name, score } = doc.data();
-                    combinedScores.set(name, { name, score: (combinedScores.get(name)?.score || 0) + score });
-                });
-                juneSnapshot.forEach(doc => {
-                    const { name, score } = doc.data();
-                    combinedScores.set(name, { name, score: (combinedScores.get(name)?.score || 0) + score });
-                });
+                const addScores = (snapshot) => {
+                    snapshot.forEach(doc => {
+                        const { name, score } = doc.data();
+                        const existing = combinedScores.get(name) || { name, score: 0 };
+                        combinedScores.set(name, { ...existing, score: existing.score + score });
+                    });
+                };
+                addScores(maySnapshot);
+                addScores(juneSnapshot);
                 const overallData = Array.from(combinedScores.values()).sort((a,b) => b.score - a.score);
                 displayLeaderboard(overallData.slice(0, 10), true);
             } catch (error) { console.error("Error fetching overall leaderboard:", error); }
@@ -457,6 +446,3 @@
     </script>
 </body>
 </html>
-```
-
-
