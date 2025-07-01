@@ -8,15 +8,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        .report-container { max-width: 900px; }
         .report-card { background-color: rgba(17, 24, 39, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .report-card h2 { border-bottom: 2px solid #a855f7; padding-bottom: 0.5rem; }
         .report-card h3 { color: #6ee7b7; } /* emerald-300 */
         .report-card h4 { color: #fde047; } /* yellow-300 */
         .report-card ul { list-style-type: disc; padding-left: 1.5rem; }
+        .report-card ol { list-style-type: decimal; padding-left: 1.5rem; }
+        .chart-container { background-color: rgba(55, 65, 81, 0.3); padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; margin-bottom: 1rem; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid rgba(255, 255, 255, 0.2); padding: 0.75rem; text-align: left; }
+        th { background-color: rgba(55, 65, 81, 0.5); }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-300">
-    <div class="container mx-auto p-4 md:p-8">
+    <div class="container mx-auto p-4 md:p-8 report-container">
         <header class="text-center mb-12">
             <h1 class="text-4xl md:text-5xl font-bold text-purple-400">Strategic Insight Report</h1>
             <p class="text-2xl text-gray-400">May 2025</p>
@@ -32,72 +39,188 @@
             <section class="report-card p-6 rounded-2xl">
                 <h2 class="text-3xl font-bold mb-6 text-cyan-400">Global Insights</h2>
                 <div class="space-y-8">
-                    <div>
-                        <h3 class="text-2xl font-semibold mb-2">The Cost of Compute: A \$7 Trillion Race to Scale Data Centres</h3>
-                        <p class="mb-4">AI is fuelling a massive demand for compute power, driving billions in infrastructure investment, but future demand remains uncertain. By 2030, data centers globally are projected to require \$6.7 trillion in capital expenditures, with \$5.2 trillion specifically for AI-equipped data centers. Companies face the challenge of balancing rapid capital deployment with prudence due to uncertainty about future AI growth. Overinvestment risks stranding assets, while underinvestment means falling behind.</p>
-                        <h4 class="text-xl font-semibold mb-2">Key Projections & Scenarios:</h4>
-                        <ul class="space-y-2">
-                            <li><strong>Base Scenario:</strong> 156 incremental GW added by 2030, requiring \$5.2 trillion.</li>
-                            <li><strong>Accelerated Demand:</strong> 205 incremental GW, requiring \$7.9 trillion.</li>
-                            <li><strong>Constrained Demand:</strong> 78 incremental GW, requiring \$3.7 trillion.</li>
+                    <article>
+                        <h3 class="text-2xl font-semibold mb-2">The Cost of Compute: A $7 Trillion Race to Scale Data Centre</h3>
+                        <p class="mb-4">AI is fuelling a massive demand for compute power driving billions in infrastructure investment, but future demand remains uncertain. Compute power, encompassing hardware, processors, memory, storage, and energy, is critical for running AI foundation models and machine learning applications. By 2030, data centers globally are projected to require $6.7 trillion in capital expenditures to meet compute power demand. This includes $5.2 trillion specifically for data centers equipped for AI processing loads and $1.5 trillion for traditional IT applications. This nearly $7 trillion total represents a staggering required outlay by 2030.</p>
+                        <p class="mb-4">Predicting future compute power demand is challenging due to the rapidly shifting AI sector. Global demand for data center capacity could almost triple by 2030, with about 70 percent driven by AI workloads. This projection hinges on two key uncertainties: the business value of AI use cases and the pace of innovation, which could be offset by Jevons Paradox (where efficiency improvements increase overall demand).</p>
+                        
+                        <div class="chart-container">
+                            <h4 class="text-xl font-semibold mb-2">Exhibit 1: Global Data Center Capacity Demand Growth (Gigawatts)</h4>
+                            <p class="text-sm text-gray-400 mb-2">Both AI and non-AI workloads will be key drivers of global data center capacity demand growth through 2030.</p>
+                            <img src="https://i.imgur.com/uN8GqSg.png" alt="Chart showing global data center capacity demand growth through 2030, with AI workload increasing significantly faster than non-AI workload." class="w-full rounded-lg">
+                        </div>
+
+                        <h4 class="text-xl font-semibold mt-4 mb-2">Investment Scenarios & Capital Expenditures:</h4>
+                        <p>McKinsey created three investment scenarios based on different demand levels:</p>
+                        <ul class="space-y-2 my-4">
+                            <li><strong>Accelerated demand:</strong> 205 incremental GW added by 2030, requiring an estimated $7.9 trillion in capital expenditures.</li>
+                            <li><strong>Base scenario (Continued momentum):</strong> 156 incremental GW added by 2030, requiring an estimated $5.2 trillion.</li>
+                            <li><strong>Constrained demand:</strong> 78 incremental GW added by 2030, requiring an estimated $3.7 trillion.</li>
                         </ul>
-                        <h4 class="text-xl font-semibold mt-4 mb-2">Investor Archetypes & Capex Distribution:</h4>
-                        <ul class="space-y-2">
-                            <li><strong>Technology Developers (~60%):</strong> \$3.1 trillion for chips and hardware.</li>
-                            <li><strong>Energizers (~25%):</strong> \$1.3 trillion for power generation and cooling.</li>
-                            <li><strong>Builders (~15%):</strong> \$0.8 trillion for land and site development.</li>
-                        </ul>
-                    </div>
-                    <div>
+
+                        <div class="chart-container">
+                            <h4 class="text-xl font-semibold mb-2">Exhibit 2: Global Data Center Capex Driven by AI (2025-30, $ Trillion)</h4>
+                             <p class="text-sm text-gray-400 mb-2">Capital investments to support AI-related data center capacity demand could range from about $3 trillion to $8 trillion by 2030.</p>
+                           <img src="https://i.imgur.com/mX2YJ9W.png" alt="Chart showing capital investments for AI data centers by scenario, broken down by Data Center Infrastructure, IT Equipment, and Power." class="w-full rounded-lg">
+                        </div>
+
+                        <h4 class="text-xl font-semibold mt-4 mb-2">Five Archetypes of AI Infrastructure Investors:</h4>
+                        <ol class="list-decimal list-inside space-y-2 pl-4">
+                            <li><strong>Builders:</strong> Real estate developers, design firms, construction companies. (Al Capex: $800 billion)</li>
+                            <li><strong>Energizers:</strong> Utilities, energy providers, cooling/electrical equipment manufacturers. (Al Capex: $1.3 trillion)</li>
+                            <li><strong>Technology developers and designers:</strong> Semiconductor firms and IT suppliers. (Al Capex: $3.1 trillion)</li>
+                            <li><strong>Operators:</strong> Hyperscalers, colocation providers, GPU-as-a-service platforms.</li>
+                            <li><strong>AI architects:</strong> AI model developers, foundation model providers.</li>
+                        </ol>
+                         <p class="mt-4">To invest with confidence, a three-pronged approach is suggested: understand demand projections, innovate on compute efficiency, and build supply-side resilience.</p>
+                    </article>
+
+                    <hr class="border-gray-700">
+
+                    <article>
                         <h3 class="text-2xl font-semibold mb-2">India Mobile Broadband Index 2025</h3>
-                        <p class="mb-4">India has emerged as a major 5G success story. Mobile data traffic jumped 23% year-over-year, touching 21.5 EB per month in 2024. 5G data traffic is expected to surpass 4G by Q1 2026.</p>
-                        <h4 class="text-xl font-semibold mb-2">Key Highlights:</h4>
+                        <p class="mb-4">This annual report from Nokia provides insights into mobile broadband performance in India, a key 5G success story.</p>
+                        
+                        <div class="chart-container">
+                             <h4 class="text-xl font-semibold mb-2">Pan-India Mobile Data Traffic (Exabyte per month)</h4>
+                             <img src="https://i.imgur.com/R3eC5zF.png" alt="Chart showing the growth of mobile data traffic in India from 2020 to 2024, reaching 21.5 EB per month." class="w-full rounded-lg">
+                        </div>
+
+                        <h4 class="text-xl font-semibold mt-4 mb-2">Key Highlights:</h4>
                         <ul class="space-y-2">
-                            <li><strong>5G Traffic:</strong> Pan-India monthly 5G traffic surged threefold year-over-year.</li>
-                            <li><strong>Data per User:</strong> Average monthly data per user soared to 27.5 GB in 2024.</li>
+                            <li><strong>Data Traffic:</strong> Mobile data traffic jumped 23% year-over-year, reaching 21.5 EB per month in 2024.</li>
+                            <li><strong>5G vs 4G:</strong> 5G data traffic is expected to surpass 4G by Q1 2026. As of 2024, 5G contributed 35% of total data traffic.</li>
+                            <li><strong>Data per User:</strong> Average monthly data per user soared to 27.5 GB in 2024, with 5G users averaging 40 GB.</li>
                             <li><strong>5G Devices:</strong> Active 5G devices doubled to reach 271 million in 2024.</li>
-                            <li><strong>5G FWA:</strong> Fixed Wireless Access is a key catalyst, with FWA users consuming over 12 times more data than mobile users.</li>
+                            <li><strong>5G FWA:</strong> Fixed Wireless Access is a key growth catalyst, with FWA users consuming over 12 times more data than mobile-only users.</li>
                         </ul>
-                    </div>
-                    <div>
+                    </article>
+
+                    <hr class="border-gray-700">
+                    
+                    <article>
                         <h3 class="text-2xl font-semibold mb-2">Signalling the Future: Five Telco Trends in 2025</h3>
                         <p class="mb-4">The telecommunications industry is set for major shifts, driven by five key trends with generative AI as a central force.</p>
-                        <h4 class="text-xl font-semibold mb-2">The Five Trends:</h4>
-                        <ol class="list-decimal list-inside space-y-2 pl-4">
-                            <li><strong>AI is the Centrepiece:</strong> Telcos are using AI for network optimization, customer service, and personalization, with 7% identified as "leaders" in adoption.</li>
-                            <li><strong>Focus on B2C Value:</strong> Amid muted ARPU growth (3% CAGR by 2030), telcos are using Fixed-Mobile Convergence (FMC) to reduce churn and enhance loyalty.</li>
-                            <li><strong>Rethinking B2B Growth:</strong> While diversifying into ICT, enterprise connectivity still accounts for ~70% of telco B2B revenue.</li>
-                            <li><strong>Alternative Connectivity:</strong> Fixed Wireless Access (FWA) and Low Earth Orbit (LEO) satellites are showing explosive growth, with FWA connections expected to reach 350 million by 2030.</li>
-                            <li><strong>Cost Optimization:</strong> Telcos continue to downsize (14% average FTE decline from 2018-2023), use AI for efficiency, and simplify products to widen margins.</li>
-                        </ol>
-                    </div>
+                        <h4 class="text-xl font-semibold mb-2">Trend #1: AI is the Centrepiece of Digitalization</h4>
+                        <p>Telcos are using AI to boost performance, retention, and marketing. Examples include China Mobile improving network speeds and T-Mobile reducing customer calls by 75% using predictive AI. The telecom industry leads other sectors in AI innovation, with 7% identified as "leaders."</p>
+                        
+                        <h4 class="text-xl font-semibold mt-4 mb-2">Trend #2: Focus on Digital Customer Journeys and FMC</h4>
+                        <p>Despite growing data demand, telco service revenue has not seen a corresponding increase, with many facing declining ARPU. To counter this, leading telcos are enhancing loyalty through digital experience upgrades and Fixed-Mobile Convergence (FMC). Swisscom, for instance, reduced churn by nearly 18% thanks to FMC.</p>
+
+                        <h4 class="text-xl font-semibold mt-4 mb-2">Trend #3: To B or Not to B - Telcos Rethink B2B Growth</h4>
+                        <p>While enterprise connectivity revenue is growing modestly (3% CAGR by 2028), it still accounts for about 70% of telco B2B revenue. Telcos are exploring non-connectivity services like cloud and cybersecurity, but only a few generate over 50% of B2B revenue from these newer offerings.</p>
+
+                        <h4 class="text-xl font-semibold mt-4 mb-2">Trend #4: Fixed is Not Fixed Anymore</h4>
+                        <p>Alternative connectivity methods like Fixed Wireless Access (FWA) and Low Earth Orbit (LEO) satellites are showing explosive growth. FWA connections are expected to grow from 160 million to 350 million by 2030. LEO satellites are also gaining traction for their low latency and cost advantages, especially for backhaul in remote areas.</p>
+
+                        <h4 class="text-xl font-semibold mt-4 mb-2">Trend #5: Increasing Focus on Cost Optimization</h4>
+                        <p>Telcos continue to optimize costs via downsizing (average 14% FTE decline from 2018-2023), AI-driven efficiencies, product simplification, and optimizing sales channels. Direct sales channels have increased to 63% share since 2020, up from 55% previously.</p>
+                    </article>
                 </div>
             </section>
 
             <section class="report-card p-6 rounded-2xl">
-                <h2 class="text-3xl font-bold mb-6 text-cyan-400">International News</h2>
-                <ul class="space-y-4">
-                    <li><strong>T-Mobile US:</strong> Celebrated its nationwide 5G SA rollout, reporting record postpaid customer additions and claiming the only nationwide 5G Advanced network in the U.S.</li>
-                    <li><strong>Telenor IoT:</strong> Became one of the first adopters of the upcoming SGP.32 global eSIM standard to better manage large-scale IoT deployments.</li>
-                    <li><strong>AT&T & Helium:</strong> Partnered with the Helium Network to expand U.S. wireless coverage using Helium's decentralized, community-built Wi-Fi hotspot infrastructure.</li>
-                    <li><strong>FinTechs in Telecom:</strong> Neobank Revolut launched a mobile service in the U.K. and Germany, highlighting the growing convergence of telecom and financial services.</li>
-                    <li><strong>Amazon's Project Kuiper:</strong> Launched the first 27 satellites for its global satellite internet network, aiming to compete with SpaceX's Starlink.</li>
-                    <li><strong>Axiata & Edotco:</strong> A consortium including Khazanah Nasional Bhd and the EPF is reportedly in talks to acquire Axiata's 63% stake in tower company Edotco.</li>
-                </ul>
+                <h2 class="text-3xl font-bold mb-6 text-cyan-400">International News Compendium</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Company/Region</th>
+                                <th>Key Development</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>T-Mobile US</td>
+                                <td>Nationwide 5G SA Rollout</td>
+                                <td>Celebrated its 5G Standalone network, reporting record postpaid customer additions and a 24% rise in net income. Also testing satellite-to-phone messaging.</td>
+                            </tr>
+                            <tr>
+                                <td>Telenor IoT</td>
+                                <td>Adopts SGP.32 eSIM Standard</td>
+                                <td>Became one of the first to adopt the new global eSIM standard for better management of large-scale IoT deployments, reducing power and simplifying logistics.</td>
+                            </tr>
+                            <tr>
+                                <td>AT&T / Helium</td>
+                                <td>Decentralized WiFi Partnership</td>
+                                <td>Partnered with the Helium Network to expand U.S. coverage using Helium's community-built Wi-Fi hotspots, enhancing connectivity where cellular networks are limited.</td>
+                            </tr>
+                            <tr>
+                                <td>FinTech / Telecom</td>
+                                <td>Sector Convergence</td>
+                                <td>FinTech companies like Revolut are launching mobile services, increasing competition and highlighting the growing convergence of financial and telecom services.</td>
+                            </tr>
+                            <tr>
+                                <td>Amazon</td>
+                                <td>Project Kuiper Launch</td>
+                                <td>Launched the first 27 satellites for its Kuiper project, a global satellite internet network aiming to compete with SpaceX's Starlink.</td>
+                            </tr>
+                            <tr>
+                                <td>Axiata / Edotco</td>
+                                <td>Potential Acquisition</td>
+                                <td>A consortium is reportedly in talks to acquire Axiata's 63% stake in telecom tower company Edotco, valued at approximately $2.2bn.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
 
             <section class="report-card p-6 rounded-2xl">
-                <h2 class="text-3xl font-bold mb-6 text-cyan-400">Domestic Insights (Indonesia)</h2>
-                <ul class="space-y-4">
-                    <li><strong>Telkom's 2024 Profit:</strong> Achieved a strong net profit of Rp23.6 trillion, driven by its Data, Internet, and IT Services segment.</li>
-                    <li><strong>IndiHome (Telkomsel):</strong> Reached 9.8 million residential customers in Q1 2025 with an ARPU of IDR 224,000, and an FMC penetration of 55%.</li>
-                    <li><strong>XLSmart Network Expansion:</strong> Following its merger, XLSmart is strengthening its network in West Java and plans to build 8,000 new BTS sites while promising no layoffs.</li>
-                    <li><strong>Indosat's Bali Nusra Growth:</strong> Recorded 2.9 million customers in the Bali and Nusa Tenggara region in Q1 2025, the highest regional growth nationwide.</li>
-                    <li><strong>Komdigi & Tejas Networks:</strong> Partnered with the Indian company to accelerate 5G and AI development in Indonesia.</li>
-                    <li><strong>TOWR Acquires DATA:</strong> Djarum Group's tower company, Sarana Menara (TOWR), completed its acquisition of Remala (DATA) for Rp535.70 Billion.</li>
-                    <li><strong>Bali Power Outage:</strong> A major power outage in Bali on May 2, 2025, disrupted internet services across the island.</li>
-                    <li><strong>Indonesia's 5G Coverage:</strong> Reached only 4.44% as of April 2025, emphasizing the need for stronger collaboration to accelerate development.</li>
-                </ul>
+                <h2 class="text-3xl font-bold mb-6 text-cyan-400">Domestic Insights Compendium (Indonesia)</h2>
+                 <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Company/Topic</th>
+                                <th>Key Development</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Telkom</td>
+                                <td>Strong 2024 Performance</td>
+                                <td>Achieved Rp150 trillion in revenue and Rp23.6 trillion in net profit, driven by its Data, Internet, and IT Services segment.</td>
+                            </tr>
+                             <tr>
+                                <td>IndiHome (Telkomsel)</td>
+                                <td>FMC Penetration</td>
+                                <td>Reached 9.8 million residential customers in Q1 2025 with an ARPU of IDR 224,000. Fixed Mobile Convergence (FMC) penetration stood at 55%.</td>
+                            </tr>
+                            <tr>
+                                <td>XLSmart</td>
+                                <td>Network Expansion & Merger</td>
+                                <td>Following its merger with Smartfren, the company is strengthening its network across West Java, planning to build 8,000 new BTS sites and promising no layoffs.</td>
+                            </tr>
+                            <tr>
+                                <td>Indosat</td>
+                                <td>Strong Regional Growth</td>
+                                <td>Recorded 2.9 million customers in the Bali and Nusa Tenggara region in Q1 2025, the highest customer growth nationwide.</td>
+                            </tr>
+                            <tr>
+                                <td>Komdigi</td>
+                                <td>Partnership for 5G/AI</td>
+                                <td>Chose Indian company Tejas Networks to help accelerate Indonesia's 5G and AI development.</td>
+                            </tr>
+                            <tr>
+                                <td>Sarana Menara (TOWR)</td>
+                                <td>Acquisition of Remala (DATA)</td>
+                                <td>Completed its acquisition of 40% of PT Remala Abadi Tbk for Rp535.70 Billion to expand its fiber optics and infrastructure business.</td>
+                            </tr>
+                            <tr>
+                                <td>Bali</td>
+                                <td>Internet Disruption</td>
+                                <td>A major power outage at the Celukan Bawang Power Plant on May 2, 2025, disrupted internet services across the island.</td>
+                            </tr>
+                            <tr>
+                                <td>Indonesia 5G</td>
+                                <td>Low Coverage</td>
+                                <td>As of April 2025, Indonesia's 5G coverage reached only 4.44%, highlighting the need for accelerated development.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
         </main>
 
