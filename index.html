@@ -39,10 +39,38 @@
 
     <div id="game-container" class="relative min-h-screen flex items-center justify-center p-4">
         
-        <div id="landing-screen" class="w-full max-w-2xl mx-auto fade-in">
+        <div id="landing-screen" class="w-full max-w-3xl mx-auto fade-in">
              <div class="card p-8 rounded-2xl text-center">
                 <h1 class="text-4xl font-bold mb-4 text-purple-300">Telecom Strategy Challenge</h1>
-                <p class="text-gray-400 mb-6">Enter your name, then select a quiz edition to begin.</p>
+                <p class="text-gray-400 mb-8">Test your strategic knowledge against the clock. Compete for the top spot!</p>
+                
+                <div class="card p-6 rounded-xl bg-gray-900/30 mb-8">
+                     <h2 class="text-2xl font-bold text-yellow-400 mb-4">How to Play</h2>
+                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                        <div class="flex items-start space-x-3">
+                            <div class="text-purple-400 text-2xl font-bold">1.</div>
+                            <div>
+                                <h3 class="font-semibold">Enter & Choose</h3>
+                                <p class="text-sm text-gray-400">Enter your name, then select the quiz edition you want to challenge.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="text-purple-400 text-2xl font-bold">2.</div>
+                             <div>
+                                <h3 class="font-semibold">Answer Fast</h3>
+                                <p class="text-sm text-gray-400">You have 20 seconds per question. The faster you answer correctly, the more points you get.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-3">
+                            <div class="text-purple-400 text-2xl font-bold">3.</div>
+                             <div>
+                                <h3 class="font-semibold">Climb the Ranks</h3>
+                                <p class="text-sm text-gray-400">Your scores are saved. Check the leaderboards to see how you stack up!</p>
+                            </div>
+                        </div>
+                     </div>
+                </div>
+
                 <input type="text" id="player-name-input" placeholder="Enter your name..." class="w-full bg-gray-800 border border-gray-600 text-white rounded-lg p-3 text-center mb-6 focus:outline-none focus:ring-2 focus:ring-purple-500">
                 
                 <div id="quiz-selection" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -114,7 +142,7 @@
 
         // =========================================================================
         const firebaseConfig = {
-            apiKey: "AIzaSyA_65xmDMDBF4pUyI7KZgmYxWR9uj6MQ1Y",
+           apiKey: "AIzaSyA_65xmDMDBF4pUyI7KZgmYxWR9uj6MQ1Y",
   authDomain: "cseo-quiz.firebaseapp.com",
   projectId: "cseo-quiz",
   storageBucket: "cseo-quiz.firebasestorage.app",
