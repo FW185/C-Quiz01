@@ -14,6 +14,8 @@
         .btn-option:hover:not(:disabled) { background-color: rgba(168, 85, 247, 0.5); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3); }
         .btn-quiz-select { transition: all 0.3s ease; background-color: rgba(55, 65, 81, 1); border: 2px solid transparent; }
         .btn-quiz-select:hover { transform: scale(1.05); border-color: #a855f7; }
+        .btn-material { transition: all 0.3s ease; background-color: rgba(31, 41, 55, 1); }
+        .btn-material:hover { background-color: rgba(75, 85, 99, 1); border-color: #a855f7; }
         .progress-bar-fill { transition: width 0.5s ease-in-out; }
         .correct-answer { background-color: #22c55e !important; color: white; transform: scale(1.05); }
         .incorrect-answer { background-color: #ef4444 !important; color: white; animation: shake 0.5s; }
@@ -46,44 +48,41 @@
                 
                 <div class="card p-6 rounded-xl bg-gray-900/30 mb-8">
                      <h2 class="text-2xl font-bold text-yellow-400 mb-4">How to Play</h2>
-                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-                        <div class="flex items-start space-x-3">
-                            <div class="text-purple-400 text-2xl font-bold">1.</div>
-                            <div>
-                                <h3 class="font-semibold">Enter & Choose</h3>
-                                <p class="text-sm text-gray-400">Enter your name, then select the quiz edition you want to challenge.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <div class="text-purple-400 text-2xl font-bold">2.</div>
-                             <div>
-                                <h3 class="font-semibold">Answer Fast</h3>
-                                <p class="text-sm text-gray-400">You have 20 seconds per question. The faster you answer correctly, the more points you get.</p>
-                            </div>
-                        </div>
-                        <div class="flex items-start space-x-3">
-                            <div class="text-purple-400 text-2xl font-bold">3.</div>
-                             <div>
-                                <h3 class="font-semibold">Climb the Ranks</h3>
-                                <p class="text-sm text-gray-400">Your scores are saved. Check the leaderboards to see how you stack up!</p>
-                            </div>
-                        </div>
+                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                        <div class="flex items-start space-x-3"><div class="text-purple-400 text-2xl font-bold">1.</div><div><h3 class="font-semibold">Read First</h3><p class="text-sm text-gray-400">Review the Reading Materials to prepare for the challenge.</p></div></div>
+                        <div class="flex items-start space-x-3"><div class="text-purple-400 text-2xl font-bold">2.</div><div><h3 class="font-semibold">Enter & Choose</h3><p class="text-sm text-gray-400">Enter your name, then select a quiz edition below.</p></div></div>
+                        <div class="flex items-start space-x-3"><div class="text-purple-400 text-2xl font-bold">3.</div><div><h3 class="font-semibold">Answer Fast</h3><p class="text-sm text-gray-400">You have 20 seconds per question. The faster you answer, the more points you get.</p></div></div>
+                        <div class="flex items-start space-x-3"><div class="text-purple-400 text-2xl font-bold">4.</div><div><h3 class="font-semibold">Climb the Ranks</h3><p class="text-sm text-gray-400">Check the leaderboards to see how you stack up against your colleagues!</p></div></div>
                      </div>
                 </div>
 
-                <input type="text" id="player-name-input" placeholder="Enter your name..." class="w-full bg-gray-800 border border-gray-600 text-white rounded-lg p-3 text-center mb-6 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                
-                <div id="quiz-selection" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <button data-quiz="may" class="btn-quiz-select p-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
-                        <h2 class="text-2xl font-bold mb-2">May Edition</h2>
-                        <p class="text-sm text-gray-400">15 Questions on AI, 5G, FWA & Telco Trends.</p>
-                    </button>
-                    <button data-quiz="june" class="btn-quiz-select p-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
-                        <h2 class="text-2xl font-bold mb-2">June Edition</h2>
-                        <p class="text-sm text-gray-400">15 Questions on ICT Models, TMT & M&A.</p>
-                    </button>
+                <div class="card p-6 rounded-xl bg-gray-900/30 mb-8">
+                    <h2 class="text-2xl font-bold text-cyan-400 mb-4">Reading Materials</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <a href="./Strategic Insight May 2025 - vF.pdf" target="_blank" class="btn-material p-4 rounded-lg flex items-center justify-center space-x-2">
+                           <span>📖</span><span>Read May Report</span>
+                        </a>
+                        <a href="./Strategic Insight Jun 2025 - vF.pdf" target="_blank" class="btn-material p-4 rounded-lg flex items-center justify-center space-x-2">
+                            <span>📖</span><span>Read June Report</span>
+                        </a>
+                    </div>
                 </div>
-                <p id="auth-status" class="text-xs text-gray-500 mt-6">Connecting to server...</p>
+
+                <div class="card p-6 rounded-xl bg-gray-900/30">
+                    <h2 class="text-2xl font-bold text-green-400 mb-4">Test Your Knowledge Now</h2>
+                    <input type="text" id="player-name-input" placeholder="Enter your name..." class="w-full bg-gray-800 border border-gray-600 text-white rounded-lg p-3 text-center mb-6 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <div id="quiz-selection" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <button data-quiz="may" class="btn-quiz-select p-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                            <h2 class="text-2xl font-bold mb-2">May Edition</h2>
+                            <p class="text-sm text-gray-400">15 Questions on AI, 5G, FWA & Telco Trends.</p>
+                        </button>
+                        <button data-quiz="june" class="btn-quiz-select p-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                            <h2 class="text-2xl font-bold mb-2">June Edition</h2>
+                            <p class="text-sm text-gray-400">15 Questions on ICT Models, TMT & M&A.</p>
+                        </button>
+                    </div>
+                    <p id="auth-status" class="text-xs text-gray-500 mt-6">Connecting to server...</p>
+                </div>
              </div>
         </div>
 
@@ -142,7 +141,7 @@
 
         // =========================================================================
         const firebaseConfig = {
-           apiKey: "AIzaSyA_65xmDMDBF4pUyI7KZgmYxWR9uj6MQ1Y",
+            apiKey: "AIzaSyA_65xmDMDBF4pUyI7KZgmYxWR9uj6MQ1Y",
   authDomain: "cseo-quiz.firebaseapp.com",
   projectId: "cseo-quiz",
   storageBucket: "cseo-quiz.firebasestorage.app",
